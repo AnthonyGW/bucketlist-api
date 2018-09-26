@@ -3,11 +3,17 @@
 var express = require('express');
 var app = express();
 
+var authRoutes = require('./routes/auth');
+
 var logger = require('morgan');
+var jsonParser = require('body-parser').json;
 
 var port = process.env.PORT || 3030;
 
 app.use(logger('dev'));
+app.use(jsonParser());
+
+app.use('/', authRoutes);
 
 app.use(function(req, res, next){
   res.header("Access-Control-Allow-Origin", "*");

@@ -6,8 +6,7 @@ var router = express.Router();
 var mid = require('../middleware/index');
 
 var Bucketlist = require('../models/bucketlist');
-var formatResponse = require('../utils/utils').formatResponse;
-var verifyInput = require('../utils/utils').verifyInput;
+var utils = require('../utils/utils');
 
 router.param("bucketlistId", function(req, res, next, id){
   Bucketlist.findById(id, function(err, doc){
@@ -27,30 +26,30 @@ router.get('/', mid.requiresLogin, function(req, res, next){
   Bucketlist.retrieveAll(req.session.userId, function(error, bucketlists){
     if(error) return next(error);
     res.status(200)
-       .json(bucketlists.map(formatResponse));
+       .json(bucketlists.map(utils.formatResponse));
   });
 });
 
 // POST /bucketlists
 router.post('/', mid.requiresLogin, function(req, res, next){
-  var bucketlistData = verifyInput(req.body);
+  var bucketlistData = utils.verifyInput(req.body);
   bucketlistData.userId = req.session.userId;
 
   Bucketlist.create(bucketlistData, function(error, bucketlist){
     if(error) return next(error);
     res.status(200)
-       .json(formatResponse(bucketlist));
+       .json(utils.formatResponse(bucketlist));
   });
 });
 
 // PUT /bucketlists/:bucketlistId
 router.put('/:bucketlistId', mid.requiresLogin, function(req, res, next){
-  var bucketlistData = verifyInput(req.body);
+  var bucketlistData = utils.verifyInput(req.body);
 
   req.bucketlist.update(bucketlistData, function(error, bucketlist){
     if(error) return next(error);
     res.status(200)
-       .json(formatResponse(bucketlist));
+       .json(utils.formatResponse(bucketlist));
   });
 });
 

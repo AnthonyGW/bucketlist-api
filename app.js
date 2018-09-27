@@ -6,6 +6,7 @@ var app = express();
 
 // Import routes
 var authRoutes = require('./routes/auth');
+var bucketlistRoutes = require('./routes/bucketlists');
 
 // Import middleware
 var logger = require('morgan');
@@ -45,6 +46,7 @@ app.use(session({
 
 // Use routes
 app.use('/', authRoutes);
+app.use('/bucketlists', bucketlistRoutes);
 
 // Enable Cross-Origin Resource Sharing
 app.use(function(req, res, next){

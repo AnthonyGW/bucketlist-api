@@ -38,7 +38,7 @@ router.post('/login', function(req, res, next){
     return next(utils.createError('All fields required.', 401));
 
   User.authenticate(userData, function(error, userId){
-    if(error || !userId) return next(error);
+    if(error) return next(error);
     req.session.userId = userId;
     res.status(200)
        .json({'message': 'Authorization successful. Check session ID named connect.sid in cookies.'});
@@ -52,7 +52,7 @@ router.get('/logout', function(req, res, next){
     req.session.destroy(function(error){
       if(error) return next(error);
       return res.status(200)
-            .json("Logged out successfully.");
+            .json({message: "Logged out successfully."});
     });
   }
 });

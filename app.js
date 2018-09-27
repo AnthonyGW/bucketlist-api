@@ -7,6 +7,7 @@ var app = express();
 // Import routes
 var authRoutes = require('./routes/auth');
 var bucketlistRoutes = require('./routes/bucketlists');
+var itemRoutes = require('./routes/items');
 
 // Import middleware
 var logger = require('morgan');
@@ -15,7 +16,7 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
-var refactorError = require('./utils').refactorError;
+var refactorError = require('./utils/utils').refactorError;
 
 // Declare app variables
 var port = process.env.PORT || 3030;
@@ -47,6 +48,7 @@ app.use(session({
 // Use routes
 app.use('/', authRoutes);
 app.use('/bucketlists', bucketlistRoutes);
+app.use('/bucketlists', itemRoutes);
 
 // Enable Cross-Origin Resource Sharing
 app.use(function(req, res, next){

@@ -1,4 +1,4 @@
-var createError = require('../utils').createError;
+var createError = require('../utils/utils').createError;
 
 function requiresLogin(req, res, next){
   if(!req.session || !req.session.userId)
@@ -7,4 +7,4 @@ function requiresLogin(req, res, next){
   return next();
 }
 
-module.exports.requiresLogin = requiresLogin;
+module.exports = { requiresLogin };

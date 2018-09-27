@@ -17,6 +17,26 @@ function verifySignup(body){
   return {status: true};
 }
 
+// verify name and description from input
+function verifyInput(body){
+  var inputData = {};
+  if(body.name){
+    Object.assign(
+      inputData, 
+      { name: body.name.trim() }
+    );
+  }
+
+  if(body.description){
+    Object.assign(
+      inputData, 
+      { description: body.description.trim() }
+    );
+  }
+
+  return inputData;
+}
+
 // generate an error with a custom message and status code
 function createError(message, status){
   var err = new Error(message);
@@ -41,18 +61,21 @@ function refactorError(error){
   return error;
 }
 
-// format bucketlist response to hide UserId and other metadata
-function formatBucketlist(bucketlist){
+// format response to hide UserId and other metadata
+function formatResponse(responseObject){
   return { 
-    id: bucketlist._id,
-    name: bucketlist.name,
-    description: bucketlist.description,
-    createDate: bucketlist.createDate,
-    updateDate: bucketlist.updateDate
+    id: responseObject._id,
+    name: responseObject.name,
+    description: responseObject.description,
+    createDate: responseObject.createDate,
+    updateDate: responseObject.updateDate
   };
 }
 
-module.exports.verifySignup = verifySignup;
-module.exports.createError = createError;
-module.exports.refactorError = refactorError;
-module.exports.formatBucketlist = formatBucketlist;
+module.exports = { 
+  verifySignup,
+  verifyInput,
+  createError,
+  refactorError,
+  formatResponse
+}

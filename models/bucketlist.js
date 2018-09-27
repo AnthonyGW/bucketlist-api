@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose');
 
-var createError = require('../utils').createError;
+var createError = require('../utils/utils').createError;
+var ItemSchema = require('./item');
 
 var BucketlistSchema = new mongoose.Schema({
   name: {
@@ -28,7 +29,8 @@ var BucketlistSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true
-  }
+  },
+  items: [ItemSchema]
 });
 
 BucketlistSchema.statics.retrieveAll = function(userId, callback){
@@ -37,6 +39,15 @@ BucketlistSchema.statics.retrieveAll = function(userId, callback){
     if(error) return callback(error, null);
     if(!bucketlists) return callback(createError("No records found.", 404), null);
     return callback(null, bucketlists);
+  });
+};
+
+BucketlistSchema.statics.retrieveAllItems = function(bucketlistId, callback){
+  Bucketlist.findById(bucketlistId)
+  .exec(function(error, bucketlist){
+    if(error) return callback(error, null);
+    if(!bucketlist) return callback(createError("Parent Bucketlist not found.", 404), null);
+    return callback(null, bucketlist.items);
   });
 };
 

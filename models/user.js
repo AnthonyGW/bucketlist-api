@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
-var createError = require('../utils').createError;
+var createError = require('../utils/utils').createError;
 
 var UserSchema = new mongoose.Schema({
   email: {

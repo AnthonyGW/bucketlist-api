@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../models/user');
-var utils = require('../utils');
+var utils = require('../utils/utils');
 
 // POST /signup
 // Register a new user

@@ -1,15 +1,14 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+import * as mid from '../middleware/index';
+import Bucketlist from '../models/bucketlist';
+import * as utils from '../utils/utils';
 
-var mid = require('../middleware/index');
+const router = express.Router();
 
-var Bucketlist = require('../models/bucketlist');
-var utils = require('../utils/utils');
-
-router.param("bucketlistId", function(req, res, next, id){
-  Bucketlist.findById(id, function(err, doc){
+router.param("bucketlistId", (req, res, next, id) => {
+  Bucketlist.findById(id, (err, doc) => {
     if(err) return next(err);
     if(!doc){
       err = new Error("Bucketlist Not Found");
@@ -22,8 +21,8 @@ router.param("bucketlistId", function(req, res, next, id){
 });
 
 // GET /bucketlists
-router.get('/', mid.requiresLogin, function(req, res, next){
-  Bucketlist.retrieveAll(req.session.userId, function(error, bucketlists){
+router.get('/', mid.requiresLogin, (req, res, next) => {
+  Bucketlist.retrieveAll(req.session.userId, (error, bucketlists) => {
     if(error) return next(error);
     res.status(200)
        .json(bucketlists.map(utils.formatResponse));
@@ -31,11 +30,11 @@ router.get('/', mid.requiresLogin, function(req, res, next){
 });
 
 // POST /bucketlists
-router.post('/', mid.requiresLogin, function(req, res, next){
+router.post('/', mid.requiresLogin, (req, res, next) => {
   var bucketlistData = utils.verifyInput(req.body);
   bucketlistData.userId = req.session.userId;
 
-  Bucketlist.create(bucketlistData, function(error, bucketlist){
+  Bucketlist.create(bucketlistData, (error, bucketlist) => {
     if(error) return next(error);
     res.status(200)
        .json(utils.formatResponse(bucketlist));
@@ -43,10 +42,10 @@ router.post('/', mid.requiresLogin, function(req, res, next){
 });
 
 // PUT /bucketlists/:bucketlistId
-router.put('/:bucketlistId', mid.requiresLogin, function(req, res, next){
-  var bucketlistData = utils.verifyInput(req.body);
+router.put('/:bucketlistId', mid.requiresLogin, (req, res, next) => {
+  const bucketlistData = utils.verifyInput(req.body);
 
-  req.bucketlist.update(bucketlistData, function(error, bucketlist){
+  req.bucketlist.update(bucketlistData, (error, bucketlist) => {
     if(error) return next(error);
     res.status(200)
        .json(utils.formatResponse(bucketlist));
@@ -54,11 +53,11 @@ router.put('/:bucketlistId', mid.requiresLogin, function(req, res, next){
 });
 
 // DELETE /bucketlists/:bucketlistId
-router.delete('/:bucketlistId', mid.requiresLogin, function(req, res, next){
-  req.bucketlist.remove(function(error){
+router.delete('/:bucketlistId', mid.requiresLogin, (req, res, next) => {
+  req.bucketlist.remove(error => {
     if(error) return next(error);
     res.json({message: "Successfully removed bucketlist."})
-  })
+  });
 });
 
-module.exports = router;
+export default router;

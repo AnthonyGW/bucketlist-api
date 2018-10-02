@@ -1,8 +1,8 @@
 'use strict';
 
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var ItemSchema = new mongoose.Schema({
+const ItemSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -25,9 +25,12 @@ var ItemSchema = new mongoose.Schema({
   }
 });
 
-ItemSchema.method('update', function(update, callback){
-  Object.assign(this, update, { updateDate: new Date() });
+ItemSchema.method('update', function(updateData, callback){
+  Object.assign(this, updateData, { updateDate: new Date() });
   this.parent().save(callback);
 });
 
-module.exports = ItemSchema;
+// ItemSchema.method('updated', (update, callback) => {
+
+// })
+export default ItemSchema;

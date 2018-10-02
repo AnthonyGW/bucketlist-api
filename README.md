@@ -6,7 +6,7 @@ A user can sign up, log in and manage bucketlists. Data is persisted using Mongo
 ## Setup
 1. Ensure node and npm are installed on the target machine. Mongo daemon must be running on the default port.
 2. Install node dependencies with `npm install`.
-3. Start the server with `node app.js` or `nodemon`.
+3. Start the server with `npm start`.
 4. Test the following endpoints:
 
 | Type | Endpoint | Data | Authorization Required | Expected Response |

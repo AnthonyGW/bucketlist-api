@@ -1,41 +1,43 @@
 'use strict';
 
-// Create Express App
-var express = require('express');
-var app = express();
-
-// Import routes
-var authRoutes = require('./routes/auth');
-var bucketlistRoutes = require('./routes/bucketlists');
-var itemRoutes = require('./routes/items');
+import express from 'express';
 
 // Import middleware
-var logger = require('morgan');
-var jsonParser = require('body-parser').json;
-var mongoose = require('mongoose');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+import morgan from 'morgan';
+import mongoose from 'mongoose';
+import session from 'express-session';
+import connectMongo from 'connect-mongo';
 
-var refactorError = require('./utils/utils').refactorError;
+// Import routes
+import authRoutes from './routes/auth';
+import bucketlistRoutes from './routes/bucketlists';
+import itemRoutes from './routes/items';
+
+import { refactorError } from './utils/utils';
+
+// Create Express App
+const app = express();
+
+const MongoStore = connectMongo(session);
 
 // Declare app variables
-var port = process.env.PORT || 3030;
+const port = process.env.PORT || 3030;
 
 // Connect to database
 mongoose.connect('mongodb://localhost:27017/bucketlist-app', { useNewUrlParser: true });
-var db = mongoose.connection;
+const db = mongoose.connection;
 
-db.on('error', function(err){
+db.on('error', err => {
   console.error('Database connection error:', err);
 });
 
-db.once('open', function(){
+db.once('open', () => {
   console.log('Connected to bucketlist-app database');
 });
 
 // Use application middleware
-app.use(logger('dev'));
-app.use(jsonParser());
+app.use(morgan('dev'));
+app.use(express.json());
 app.use(session({
   secret: "cool-express-app",
   resave: true,
@@ -51,7 +53,7 @@ app.use('/bucketlists', bucketlistRoutes);
 app.use('/bucketlists', itemRoutes);
 
 // Enable Cross-Origin Resource Sharing
-app.use(function(req, res, next){
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   if(req.method === "OPTIONS"){
@@ -62,14 +64,14 @@ app.use(function(req, res, next){
 });
 
 // Catch 404 errors and pass to error handler
-app.use(function(req, res, next){
-  var err = new Error("Not Found");
+app.use((req, res, next) => {
+  const err = new Error("Not Found");
   err.status = 404;
   next(err);
 });
 
 // Error handler
-app.use(function(err, req, res, next){
+app.use((err, req, res, next) => {
   err = refactorError(err);
   res.status(err.status || 500);
   res.json({
@@ -79,6 +81,6 @@ app.use(function(err, req, res, next){
   });
 });
 
-app.listen(port, function(){
+app.listen(port, () => {
   console.log("Server is listening on port", port);
 });

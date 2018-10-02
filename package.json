@@ -4,18 +4,24 @@
   "description": "Simple bucketlist api with user authentication",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package*.json,./README* --copy-files",
+    "start": "npm run build && node dist/app.js"
   },
   "keywords": [],
   "author": "Anthony G. Waithaka",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^3.0.1",
-    "body-parser": "^1.15.2",
     "connect-mongo": "^2.0.1",
-    "express": "^4.13.4",
+    "express": "^4.16.3",
     "express-session": "^1.15.6",
     "mongoose": "^5.2.8",
-    "morgan": "^1.7.0"
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "rimraf": "^2.6.2"
   }
 }

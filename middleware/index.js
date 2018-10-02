@@ -1,10 +1,8 @@
-var createError = require('../utils/utils').createError;
+import { createError } from '../utils/utils';
 
-function requiresLogin(req, res, next){
+export const requiresLogin = (req, res, next) => {
   if(!req.session || !req.session.userId)
     return next(createError('Access denied. User must be logged in.', 403));
 
   return next();
 }
-
-module.exports = { requiresLogin };

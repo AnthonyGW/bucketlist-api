@@ -1,11 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import { createError } from '../utils/utils';
+import ItemSchema from './item';
 
-var createError = require('../utils/utils').createError;
-var ItemSchema = require('./item');
-
-var BucketlistSchema = new mongoose.Schema({
+const BucketlistSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -33,18 +32,18 @@ var BucketlistSchema = new mongoose.Schema({
   items: [ItemSchema]
 });
 
-BucketlistSchema.statics.retrieveAll = function(userId, callback){
+BucketlistSchema.statics.retrieveAll = (userId, callback) => {
   Bucketlist.find({ userId: userId })
-  .exec(function(error, bucketlists){
+  .exec((error, bucketlists) => {
     if(error) return callback(error, null);
     if(!bucketlists) return callback(createError("No records found.", 404), null);
     return callback(null, bucketlists);
   });
 };
 
-BucketlistSchema.statics.retrieveAllItems = function(bucketlistId, callback){
+BucketlistSchema.statics.retrieveAllItems = (bucketlistId, callback) => {
   Bucketlist.findById(bucketlistId)
-  .exec(function(error, bucketlist){
+  .exec((error, bucketlist) => {
     if(error) return callback(error, null);
     if(!bucketlist) return callback(createError("Parent Bucketlist not found.", 404), null);
     return callback(null, bucketlist.items);
@@ -56,5 +55,6 @@ BucketlistSchema.method('update', function(update, callback){
   this.save(callback);
 });
 
-var Bucketlist = mongoose.model('Bucketlist', BucketlistSchema);
-module.exports = Bucketlist;
+const Bucketlist = mongoose.model('Bucketlist', BucketlistSchema);
+
+export default Bucketlist;
